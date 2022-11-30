@@ -16,3 +16,13 @@
 ### Combat
 
 - The player has a gun to fire at enemies
+
+### Gameplay
+
+- The player new has a score, they earn 5 score for every enemy kill and 1 for every token picked up
+- The level can only be finished if the player has at least 50 score
+
+### UI
+
+ - New HUD element to show score
+ - New HUD element to explain the objective

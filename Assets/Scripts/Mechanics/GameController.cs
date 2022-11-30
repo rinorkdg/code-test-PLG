@@ -12,6 +12,8 @@ namespace Platformer.Mechanics
     {
         public static GameController Instance { get; private set; }
 
+        public int Score { get; private set; }
+
         //This model field is public and can be therefore be modified in the 
         //inspector.
         //The reference actually comes from the InstanceRegister, and is shared
@@ -33,6 +35,11 @@ namespace Platformer.Mechanics
         void Update()
         {
             if (Instance == this) Simulation.Tick();
+        }
+
+        public void AddScore(int increment)
+        {
+            Score += increment;
         }
     }
 }

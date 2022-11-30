@@ -1,6 +1,7 @@
 using Platformer.Gameplay;
 using UnityEngine;
 using static Platformer.Core.Simulation;
+using Platformer.Mechanics;
 
 namespace Platformer.Mechanics
 {
@@ -9,13 +10,20 @@ namespace Platformer.Mechanics
     /// </summary>
     public class VictoryZone : MonoBehaviour
     {
+        //score needed to be able to win
+        [SerializeField] private int scoreToWin = 50;
+
         void OnTriggerEnter2D(Collider2D collider)
         {
             var p = collider.gameObject.GetComponent<PlayerController>();
             if (p != null)
             {
-                var ev = Schedule<PlayerEnteredVictoryZone>();
-                ev.victoryZone = this;
+                //win condition
+                if (GameController.Instance.Score >= scoreToWin)
+                {
+                    var ev = Schedule<PlayerEnteredVictoryZone>();
+                    ev.victoryZone = this;
+                }
             }
         }
     }
