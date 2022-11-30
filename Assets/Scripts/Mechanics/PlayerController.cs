@@ -63,6 +63,24 @@ namespace Platformer.Mechanics
                     stopJump = true;
                     Schedule<PlayerStopJump>().player = this;
                 }
+
+                //if the player is clinging to a wall
+                if (IsClingingToWall && (Mathf.Abs(move.x) > 0.01f))
+                {
+                    //slow their fall
+                    gravityModifier = 0.1f;
+                    
+                    //at this point the player can walljump
+                    if (Input.GetButtonDown("Jump"))
+                    {
+                        jumpState = JumpState.PrepareToJump;
+                    }
+                }
+                //if not clinging to wall, return to normal fall speed
+                else
+                {
+                    gravityModifier = 1f;
+                }
             }
             else
             {
@@ -104,10 +122,28 @@ namespace Platformer.Mechanics
 
         protected override void ComputeVelocity()
         {
+            float wallJumpBounce = 0f;
+
+            //jumping normally
             if (jump && IsGrounded)
             {
                 velocity.y = jumpTakeOffSpeed * model.jumpModifier;
                 jump = false;
+            }
+            //walljumping
+            else if(jump && IsClingingToWall)
+            {
+                body.Cast(move, contactFilter, hitBuffer, move.magnitude + shellRadius);
+                foreach (var hit in hitBuffer)
+                {
+                    if (Mathf.Abs(hit.normal.x) == 1)
+                    {
+                        velocity.y = jumpTakeOffSpeed * model.jumpModifier;
+                        wallJumpBounce += hit.normal.x * jumpTakeOffSpeed * model.jumpModifier;
+                        jump = false;
+                        break;
+                    }
+                }
             }
             else if (stopJump)
             {
@@ -127,6 +163,7 @@ namespace Platformer.Mechanics
             animator.SetFloat("velocityX", Mathf.Abs(velocity.x) / maxSpeed);
 
             targetVelocity = move * maxSpeed;
+            targetVelocity.x += wallJumpBounce;
         }
 
         public enum JumpState

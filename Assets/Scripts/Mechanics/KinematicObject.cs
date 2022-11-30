@@ -29,6 +29,7 @@ namespace Platformer.Mechanics
         /// </summary>
         /// <value></value>
         public bool IsGrounded { get; private set; }
+        public bool IsClingingToWall {get; private set; }
 
         protected Vector2 targetVelocity;
         protected Vector2 groundNormal;
@@ -110,6 +111,7 @@ namespace Platformer.Mechanics
             velocity.x = targetVelocity.x;
 
             IsGrounded = false;
+            IsClingingToWall = false;
 
             var deltaPosition = velocity * Time.deltaTime;
 
@@ -158,10 +160,21 @@ namespace Platformer.Mechanics
                             velocity = velocity - projection * currentNormal;
                         }
                     }
+                    //if the object hits the ceiling, cancel their upward velocity
                     else if(currentNormal.y == -1)
                     {
                         velocity.x *= 0;
                         velocity.y = Mathf.Min(velocity.y, 0);
+                    }
+
+                    //check if the object is touching a wall but not the ground
+                    if(!IsGrounded && (Mathf.Abs(currentNormal.x) == 1))
+                    {
+                        IsClingingToWall = true;
+                    }
+                    else
+                    {
+                        IsClingingToWall = false;
                     }
 
                     //remove shellDistance from actual move distance.
