@@ -25,6 +25,7 @@
 - The level can only be finished if the player has at least 50 score
 - There are gun pickups for the user to replenish ammo or get a new one
 - The gun draws a line when fired
+- Added a checkpoint halfway through the level
 
 ### UI
 
@@ -32,3 +33,10 @@
 - New HUD element to explain the objective
 - Crosshair to show where you're aiming
 - Ammo is shown above the crosshair
+- Checkpont shows when you pass it
+
+### Audio
+
+- Gun firing sound added
+- Sound for picking up gun added
+- Sound for passing checkpoint added
