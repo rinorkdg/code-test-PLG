@@ -16,13 +16,19 @@
 ### Combat
 
 - The player has a gun to fire at enemies
+- The gun has limited ammo and can be thrown after it runs out
+- Throwing the gun is lethal for enemies, be resourceful!
 
 ### Gameplay
 
 - The player new has a score, they earn 5 score for every enemy kill and 1 for every token picked up
 - The level can only be finished if the player has at least 50 score
+- There are gun pickups for the user to replenish ammo or get a new one
+- The gun draws a line when fired
 
 ### UI
 
- - New HUD element to show score
- - New HUD element to explain the objective
+- New HUD element to show score
+- New HUD element to explain the objective
+- Crosshair to show where you're aiming
+- Ammo is shown above the crosshair

@@ -40,6 +40,14 @@ namespace Platformer.Mechanics
                 ev.player = player;
                 ev.enemy = this;
             }
+
+            //if a gun hits the enemy, they die
+            var gun = collision.gameObject.GetComponent<Gun>();
+            if (gun != null)
+            {
+                var ev = Schedule<EnemyDeath>();
+                ev.enemy = this;
+            }
         }
 
         void Update()

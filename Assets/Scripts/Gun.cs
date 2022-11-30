@@ -8,8 +8,12 @@ using Platformer.UI;
 
 public class Gun : MonoBehaviour
 {
-    public float fireRange = 100f;
+    [SerializeField] private float fireRange = 100f;
+    [SerializeField] private float throwForce = 100;
+    public int maxAmmo = 5;
+    public int ammo;
 
+    private bool hasBeenThrown = false;
     private Vector3 mousePositionInWorld;
     private Vector3 deltaMouseToObject;
     private float rotationZ;
@@ -20,11 +24,13 @@ public class Gun : MonoBehaviour
     private void Start() {
         lineRenderer = GetComponent<LineRenderer>();
         metaGameController = FindObjectOfType<MetaGameController>();
+        ammo = maxAmmo;
     }
     
     private void Update()
     {
-        if (!metaGameController.GameIsPaused)
+        //make sure you can't operate the gun while the menu is up or while it's on the ground
+        if (!metaGameController.GameIsPaused && !hasBeenThrown)
         {
             //get the position of the mouse in worldspace, we're working with Vector3 since we want to rotate our gun in the XY plane, around the Z axis (depth)
             mousePositionInWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -36,32 +42,69 @@ public class Gun : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                Fire();
+                //if they have ammo, fire the gun
+                if (ammo > 0)
+                {
+                    Fire();
+                }
+                //if they don't have ammo, THROW the gun
+                else
+                {
+                    Throw();
+                }
             }
         }
     }
 
     private void Fire()
     {
+        ammo--;
+
         RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right, fireRange);
 
+        //if the shot hits something
         if (hit.collider != null)
         {
+            //draw line
             StartCoroutine(DrawFireLine(hit.point));
 
+            //if it hits an enemy
             if(hit.transform.CompareTag("Enemy"))
             {
+                //kill enemy
                 Schedule<EnemyDeath>().enemy = hit.transform.GetComponent<EnemyController>();
                 Destroy(hit.transform.gameObject, 5f);
             }
         }
+        //if the shot hits nothing
         else
         {
+            //calculate a point ourselves to draw a line
             Vector3 lineEnd = transform.position + transform.right * fireRange;
             StartCoroutine(DrawFireLine(lineEnd));
         }
     }
 
+    private void Throw()
+    {
+        //unparent from the player and get physics working
+        transform.parent = null;
+        hasBeenThrown = true;
+        var rigidbody = GetComponent<Rigidbody2D>();
+        rigidbody.simulated = true;
+        GetComponent<BoxCollider2D>().enabled = true;
+
+        //figuring out what direction to throw in based on mouse position
+        var mousePositionFromCenter = Input.mousePosition;
+        mousePositionFromCenter.x -= Screen.width / 2;
+        mousePositionFromCenter.y -= Screen.height / 2;
+
+        //throw the gun and despawn after a bit to declutter
+        rigidbody.AddForce(mousePositionFromCenter.normalized * throwForce);
+        Destroy(gameObject, 2f);
+    }
+
+    //this function draws a line for 160ms for visual clarity
     private IEnumerator DrawFireLine(Vector3 endPoint)
     {
         lineRenderer.enabled = true;
