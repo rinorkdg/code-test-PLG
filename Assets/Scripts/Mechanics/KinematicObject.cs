@@ -30,6 +30,9 @@ namespace Platformer.Mechanics
         /// <value></value>
         public bool IsGrounded { get; private set; }
         public bool IsClingingToWall {get; private set; }
+        public Vector2 WallClingNormal {get; private set; }
+
+        private Coroutine wallClingGraceInstance;
 
         protected Vector2 targetVelocity;
         protected Vector2 groundNormal;
@@ -171,10 +174,21 @@ namespace Platformer.Mechanics
                     if(!IsGrounded && (Mathf.Abs(currentNormal.x) == 1))
                     {
                         IsClingingToWall = true;
+                        WallClingNormal = currentNormal;
+                        //if the wallcling coroutine is running, stop it
+                        if (wallClingGraceInstance != null)
+                        {
+                            StopCoroutine(wallClingGraceInstance);
+                        }
                     }
                     else
                     {
-                        IsClingingToWall = false;
+                        WallClingNormal = Vector2.zero;
+                        //if the wallcling coroutine is not running, do so
+                        if (wallClingGraceInstance == null)
+                        {
+                            wallClingGraceInstance = StartCoroutine(WallClingGrace());
+                        }
                     }
 
                     //remove shellDistance from actual move distance.
@@ -183,6 +197,13 @@ namespace Platformer.Mechanics
                 }
             }
             body.position = body.position + move.normalized * distance;
+        }
+
+        //this coroutine wait's 160ms before updating the wallcling variable to false, to give the player a better shot at walljumping if they chage input
+        private IEnumerator WallClingGrace(){
+            yield return new WaitForSeconds(0.16f);
+            IsClingingToWall = false;
+            wallClingGraceInstance = null;
         }
 
     }

@@ -133,17 +133,9 @@ namespace Platformer.Mechanics
             //walljumping
             else if(jump && IsClingingToWall)
             {
-                body.Cast(move, contactFilter, hitBuffer, move.magnitude + shellRadius);
-                foreach (var hit in hitBuffer)
-                {
-                    if (Mathf.Abs(hit.normal.x) == 1)
-                    {
-                        velocity.y = jumpTakeOffSpeed * model.jumpModifier;
-                        wallJumpBounce += hit.normal.x * jumpTakeOffSpeed * model.jumpModifier;
-                        jump = false;
-                        break;
-                    }
-                }
+                velocity.y = jumpTakeOffSpeed * model.jumpModifier;
+                wallJumpBounce = WallClingNormal.x * jumpTakeOffSpeed * model.jumpModifier * 5f;
+                jump = false;
             }
             else if (stopJump)
             {
@@ -163,7 +155,12 @@ namespace Platformer.Mechanics
             animator.SetFloat("velocityX", Mathf.Abs(velocity.x) / maxSpeed);
 
             targetVelocity = move * maxSpeed;
-            targetVelocity.x += wallJumpBounce;
+
+            //overwrite horizontal movement if the player walljumps
+            if (jump && IsClingingToWall)
+            {
+                targetVelocity.x = wallJumpBounce;
+            }
         }
 
         public enum JumpState
