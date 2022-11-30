@@ -22,19 +22,21 @@ public class Gun : MonoBehaviour
 
     private LineRenderer lineRenderer;
     private MetaGameController metaGameController;
+    private PlayerController player;
     public AudioSource audioSource;
 
     private void Start() {
         lineRenderer = GetComponent<LineRenderer>();
         metaGameController = FindObjectOfType<MetaGameController>();
         audioSource = GetComponent<AudioSource>();
+        player = FindObjectOfType<PlayerController>();
         ammo = maxAmmo;
     }
     
     private void Update()
     {
         //make sure you can't operate the gun while the menu is up or while it's on the ground
-        if (!metaGameController.GameIsPaused && !hasBeenThrown)
+        if (!metaGameController.GameIsPaused && !hasBeenThrown && player.controlEnabled)
         {
             //get the position of the mouse in worldspace, we're working with Vector3 since we want to rotate our gun in the XY plane, around the Z axis (depth)
             mousePositionInWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
