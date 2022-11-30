@@ -123,6 +123,7 @@ namespace Platformer.Mechanics
         protected override void ComputeVelocity()
         {
             float wallJumpBounce = 0f;
+            bool wallJump = false;
 
             //jumping normally
             if (jump && IsGrounded)
@@ -134,7 +135,8 @@ namespace Platformer.Mechanics
             else if(jump && IsClingingToWall)
             {
                 velocity.y = jumpTakeOffSpeed * model.jumpModifier;
-                wallJumpBounce = WallClingNormal.x * jumpTakeOffSpeed * model.jumpModifier * 5f;
+                wallJumpBounce = WallClingNormal.x * jumpTakeOffSpeed * model.jumpModifier;
+                wallJump = true;
                 jump = false;
             }
             else if (stopJump)
@@ -157,9 +159,10 @@ namespace Platformer.Mechanics
             targetVelocity = move * maxSpeed;
 
             //overwrite horizontal movement if the player walljumps
-            if (jump && IsClingingToWall)
+            if (wallJump && IsClingingToWall)
             {
-                targetVelocity.x = wallJumpBounce;
+                wallJump = false;
+                targetVelocity.x += wallJumpBounce;
             }
         }
 
