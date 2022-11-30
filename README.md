@@ -12,3 +12,7 @@
 
 - The player can cling to walls to descend more slowly
 - The player can walljump (currently rough) with a 160ms grace period when they let go of a wall
+
+### Combat
+
+- The player has a gun to fire at enemies
