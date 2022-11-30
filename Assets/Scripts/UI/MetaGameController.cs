@@ -27,6 +27,8 @@ namespace Platformer.UI
 
         bool showMainCanvas = false;
 
+        public bool GameIsPaused { get{ return showMainCanvas; } }
+
         void OnEnable()
         {
             _ToggleMainMenu(showMainCanvas);
