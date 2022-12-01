@@ -1,4 +1,4 @@
-# Changelog
+# Run and Gun Changelog
 
 ## Improvements
 
@@ -20,14 +20,13 @@
 - The player has a gun to fire at enemies
 - The gun has limited ammo and can be thrown after it runs out
 - Throwing the gun is lethal for enemies, be resourceful!
-- Added flying ghost enemies that will chase you if you get to close
+- Added flying ghost enemies that will chase you if you get too close
 
 ### Gameplay
 
 - The player now has a score, they earn 5 score for every enemy kill and 1 for every token picked up
 - The level can only be finished if the player has at least 50 score
 - There are gun pickups for the user to replenish ammo or get a new one
-- The gun draws a line when fired
 - Added a checkpoint halfway through the level
 
 ### UI
@@ -38,6 +37,12 @@
 - Ammo is shown above the crosshair
 - Checkpont shows when you pass it
 - Added option turn music on and off
+
+### Visuals
+
+- The gun draws a line when fired
+- The gun has a custom sprite
+- The checkpoint has a flag
 
 ### Audio
 
