@@ -20,6 +20,7 @@
 - The player has a gun to fire at enemies
 - The gun has limited ammo and can be thrown after it runs out
 - Throwing the gun is lethal for enemies, be resourceful!
+- Added flying ghost enemies that will chase you if you get to close
 
 ### Gameplay
 

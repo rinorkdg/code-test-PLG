@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Platformer.Core;
 using Platformer.Model;
+using Platformer.Mechanics;
 using UnityEngine;
 
 namespace Platformer.Gameplay
@@ -30,6 +31,12 @@ namespace Platformer.Gameplay
                 player.animator.SetTrigger("hurt");
                 player.animator.SetBool("dead", true);
                 Simulation.Schedule<PlayerSpawn>(2);
+
+                EnemyController[] enemies = GameObject.FindObjectsOfType<EnemyController>();
+                foreach (EnemyController enemy in enemies)
+                {
+                    enemy.chaseMode = false;
+                }
             }
         }
     }

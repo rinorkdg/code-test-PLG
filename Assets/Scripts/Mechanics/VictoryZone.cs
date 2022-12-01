@@ -23,6 +23,13 @@ namespace Platformer.Mechanics
                 {
                     var ev = Schedule<PlayerEnteredVictoryZone>();
                     ev.victoryZone = this;
+
+                    //despawn all enemies on win
+                    EnemyController[] enemies = FindObjectsOfType<EnemyController>();
+                    foreach (EnemyController enemy in enemies)
+                    {
+                        Destroy(enemy.gameObject);
+                    }
                 }
             }
         }

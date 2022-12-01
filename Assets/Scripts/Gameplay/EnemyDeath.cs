@@ -13,6 +13,7 @@ namespace Platformer.Gameplay
 
         public override void Execute()
         {
+            enemy.chaseMode = false;
             GameController.Instance.AddScore(5);
             enemy._collider.enabled = false;
             enemy.control.enabled = false;

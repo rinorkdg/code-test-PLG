@@ -12,6 +12,8 @@ namespace Platformer.Mechanics
     [RequireComponent(typeof(AnimationController), typeof(Collider2D))]
     public class EnemyController : MonoBehaviour
     {
+        [SerializeField] float flySpeed = 2f;
+
         public PatrolPath path;
         public AudioClip ouch;
 
@@ -22,6 +24,9 @@ namespace Platformer.Mechanics
         SpriteRenderer spriteRenderer;
 
         public Bounds Bounds => _collider.bounds;
+
+        [System.NonSerialized] public bool chaseMode = false;
+        private PlayerController playerToChase;
 
         void Awake()
         {
@@ -39,6 +44,7 @@ namespace Platformer.Mechanics
                 var ev = Schedule<PlayerEnemyCollision>();
                 ev.player = player;
                 ev.enemy = this;
+                chaseMode = false;
             }
 
             //if a gun hits the enemy, they die
@@ -57,7 +63,21 @@ namespace Platformer.Mechanics
                 if (mover == null) mover = path.CreateMover(control.maxSpeed * 0.5f);
                 control.move.x = Mathf.Clamp(mover.Position.x - transform.position.x, -1, 1);
             }
+            if (chaseMode)
+            {
+                ChasePlayer();
+            }
         }
 
+        public void OnPlayerFound(PlayerController foundPlayer)
+        {
+            chaseMode = true;
+            playerToChase = foundPlayer;
+        }
+
+        private void ChasePlayer()
+        {
+            transform.position = Vector2.MoveTowards(transform.position, playerToChase.transform.position, flySpeed * Time.deltaTime);
+        }
     }
 }
