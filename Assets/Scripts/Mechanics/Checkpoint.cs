@@ -41,6 +41,7 @@ public class Checkpoint : MonoBehaviour
     private IEnumerator TextAnimation()
     {
         text.SetActive(true);
+        transform.GetChild(1).gameObject.SetActive(true);
         
         yield return new WaitForSeconds(duration);
 
