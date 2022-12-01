@@ -22,6 +22,8 @@ namespace Platformer.Mechanics
         //conveniently configured inside the inspector.
         public PlatformerModel model = Simulation.GetModel<PlatformerModel>();
 
+        private AudioSource musicPlayer;
+
         void OnEnable()
         {
             Instance = this;
@@ -32,6 +34,10 @@ namespace Platformer.Mechanics
             if (Instance == this) Instance = null;
         }
 
+        void Start()
+        {
+            musicPlayer = GetComponent<AudioSource>();
+        }
         void Update()
         {
             if (Instance == this) Simulation.Tick();
@@ -40,6 +46,11 @@ namespace Platformer.Mechanics
         public void AddScore(int increment)
         {
             Score += increment;
+        }
+
+        public void ToggleMusic()
+        {
+            musicPlayer.enabled = !musicPlayer.enabled;
         }
     }
 }
